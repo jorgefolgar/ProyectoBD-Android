@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Mueblería UMG</string>
+    <string name="main_welcome">Portal de compras — conecta la API del backend para catálogo y carrito.</string>
+    <string name="main_hint">Según el enunciado: acceso a datos solo vía procedimientos en Oracle; la app consume la API que los invoca.</string>
+    <string name="api_base_label">API base: %1$s</string>
+</resources>

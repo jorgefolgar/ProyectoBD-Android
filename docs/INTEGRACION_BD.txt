@@ -1,0 +1,27 @@
+Integración con Oracle y documentación del curso (Muebles de los Alpes / Bases de Datos II)
+==========================================================================================
+
+1) Regla del enunciado
+   - Toda la lógica de acceso a datos debe ir en el DBMS Oracle (procedimientos, funciones,
+     paquetes PL/SQL), sin SQL embebido en el código de aplicación.
+   - La app Android NO debe conectar directamente a Oracle con drivers JDBC en producción:
+     expone credenciales y complica seguridad y despliegue.
+
+2) Arquitectura recomendada
+   - Servidor (ASP.NET / Web API en VB.NET, mismo equipo que el portal web) recibe peticiones
+     HTTP y ejecuta las llamadas a los procedimientos almacenados en Oracle 21c.
+   - La app Android solo habla HTTP/HTTPS con ese servidor (Retrofit en este proyecto).
+
+3) Qué debéis implementar en el backend
+   - Endpoints REST (o similar) para: catálogo de productos, carrito/orden de venta, login de
+     cliente, etc., según el enunciado.
+   - Cada endpoint, por detrás, invoca los paquetes/procedimientos acordados en Oracle.
+
+4) Esta carpeta (ProyectoBD Android)
+   - Contiene la capa de red (Retrofit) y DTOs de ejemplo.
+   - Ajustad BuildConfig.API_BASE_URL en app/build.gradle.kts al servidor real.
+   - Emulador Android: la máquina host se alcanza como 10.0.2.2 (no usar "localhost" desde el emulador).
+
+5) DataGuard / réplica
+   - Las consultas pesadas de reportes deben ir contra la base réplica cuando exista; eso se
+     configura en el servidor y Oracle, no en la app móvil.

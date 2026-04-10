@@ -1,0 +1,5 @@
+# Copiar este archivo como "local.properties" en la raíz del proyecto Android
+# (local.properties está en .gitignore y no se sube a Git).
+#
+# Ruta del Android SDK en Windows (ejemplo; ajustar a tu usuario):
+sdk.dir=C\:\\Users\\TU_USUARIO\\AppData\\Local\\Android\\Sdk

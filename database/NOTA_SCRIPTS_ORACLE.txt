@@ -1,0 +1,9 @@
+Los scripts DDL y paquetes PL/SQL (Oracle 21c) son comunes al proyecto web y a la API que
+consumirá esta app. Convención sugerida:
+
+- Mantener un único repositorio o carpeta de equipo con:
+  /scripts/ddl
+  /scripts/packages  (cabeceras .sql de paquetes y cuerpos)
+
+Este archivo solo documenta la convención; los .sql deben generarlos y versionarlos según
+el modelo entidad-relación del curso.
