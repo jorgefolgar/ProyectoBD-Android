@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="corner_card">14dp</dimen>
+    <dimen name="corner_card_large">20dp</dimen>
+    <dimen name="corner_sheet_top">20dp</dimen>
+    <dimen name="padding_screen_horizontal">20dp</dimen>
+    <dimen name="padding_screen_vertical">16dp</dimen>
+    <dimen name="elevation_toolbar">0dp</dimen>
+    <dimen name="elevation_nav">8dp</dimen>
+</resources>

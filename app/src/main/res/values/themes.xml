@@ -2,7 +2,23 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <style name="Theme.Muebleria" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="colorPrimary">@color/purple_500</item>
+        <item name="colorPrimaryDark">@color/purple_700</item>
         <item name="colorPrimaryVariant">@color/purple_700</item>
+        <item name="colorSecondary">@color/purple_200</item>
+        <item name="colorOnPrimary">@color/text_on_primary</item>
+        <item name="colorOnSecondary">@color/text_primary</item>
         <item name="android:statusBarColor" tools:targetApi="l">@color/purple_700</item>
+        <item name="android:navigationBarColor">@color/surface_container</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">true</item>
+        <item name="android:windowBackground">@color/surface</item>
+        <item name="materialCardViewStyle">@style/Widget.Muebleria.Card</item>
+        <item name="android:textColorPrimary">@color/text_primary</item>
+        <item name="android:textColorSecondary">@color/text_secondary</item>
+        <item name="textAppearanceBodySmall">@style/TextAppearance.Muebleria.BodySmall</item>
+        <item name="textAppearanceBodyMedium">@style/TextAppearance.Muebleria.BodyMedium</item>
+        <item name="textAppearanceBodyLarge">@style/TextAppearance.Muebleria.BodyLarge</item>
+        <item name="textAppearanceTitleSmall">@style/TextAppearance.Muebleria.TitleSmall</item>
+        <item name="textAppearanceTitleMedium">@style/TextAppearance.Muebleria.TitleMedium</item>
+        <item name="textAppearanceHeadlineSmall">@style/TextAppearance.Muebleria.HeadlineSmall</item>
     </style>
 </resources>

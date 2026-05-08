@@ -1,7 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="purple_500">#6750A4</color>
-    <color name="purple_700">#4F378B</color>
+    <!-- Marca: tonos tipo nogal / pizarra (compatibilidad: mismos nombres purple_* que usa el tema) -->
+    <color name="purple_500">#3D4F52</color>
+    <color name="purple_700">#283538</color>
+    <color name="purple_200">#C5A572</color>
+
+    <!-- Superficies -->
+    <color name="surface">#F6F4F1</color>
+    <color name="surface_variant">#EAE6E0</color>
+    <color name="surface_container">#FFFDFB</color>
     <color name="white">#FFFFFFFF</color>
     <color name="black">#FF000000</color>
+
+    <!-- Texto -->
+    <color name="text_primary">#1C2325</color>
+    <color name="text_secondary">#5E676B</color>
+    <color name="text_on_primary">#FFFFFFFF</color>
+
+    <!-- Contorno / división -->
+    <color name="divider">#DCD6CC</color>
+    <color name="outline_soft">#C9C3BA</color>
+
+    <!-- Estados -->
+    <color name="success">#2E6B4E</color>
+    <color name="error">#B3261E</color>
+
+    <!-- Gradientes auxiliares -->
+    <color name="gradient_auth_end">#EDE9E3</color>
 </resources>

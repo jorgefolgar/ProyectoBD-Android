@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="ShapeAppearance.Muebleria.Card" parent="ShapeAppearance.MaterialComponents.MediumComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">@dimen/corner_card</item>
+    </style>
+
+    <style name="ShapeAppearance.Muebleria.CardLarge" parent="ShapeAppearance.MaterialComponents.LargeComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">@dimen/corner_card_large</item>
+    </style>
+
+    <style name="ShapeAppearance.Muebleria.BottomSheet" parent="ShapeAppearance.MaterialComponents.LargeComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopLeft">@dimen/corner_sheet_top</item>
+        <item name="cornerSizeTopRight">@dimen/corner_sheet_top</item>
+        <item name="cornerSizeBottomLeft">0dp</item>
+        <item name="cornerSizeBottomRight">0dp</item>
+    </style>
+
+    <style name="Widget.Muebleria.Card" parent="Widget.MaterialComponents.CardView">
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearance.Muebleria.Card</item>
+        <item name="cardElevation">2dp</item>
+        <item name="strokeWidth">0dp</item>
+        <item name="cardBackgroundColor">@color/surface_container</item>
+    </style>
+
+    <style name="Widget.Muebleria.TextInput" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxCornerRadiusTopStart">12dp</item>
+        <item name="boxCornerRadiusTopEnd">12dp</item>
+        <item name="boxCornerRadiusBottomStart">12dp</item>
+        <item name="boxCornerRadiusBottomEnd">12dp</item>
+        <item name="boxStrokeColor">@color/outline_soft</item>
+        <item name="hintTextColor">@color/text_secondary</item>
+    </style>
+
+    <style name="TextAppearance.Muebleria.BrandTitle" parent="TextAppearance.MaterialComponents.Headline5">
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:letterSpacing">0.02</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <style name="TextAppearance.Muebleria.BrandSubtitle" parent="TextAppearance.MaterialComponents.Body1">
+        <item name="android:textColor">@color/text_secondary</item>
+        <item name="android:letterSpacing">0.04</item>
+    </style>
+
+    <!-- Tipografía global ligeramente más grande para mejor legibilidad -->
+    <style name="TextAppearance.Muebleria.BodySmall" parent="TextAppearance.MaterialComponents.Body2">
+        <item name="android:textSize">15sp</item>
+    </style>
+
+    <style name="TextAppearance.Muebleria.BodyMedium" parent="TextAppearance.MaterialComponents.Body1">
+        <item name="android:textSize">17sp</item>
+    </style>
+
+    <style name="TextAppearance.Muebleria.BodyLarge" parent="TextAppearance.MaterialComponents.Body1">
+        <item name="android:textSize">19sp</item>
+    </style>
+
+    <style name="TextAppearance.Muebleria.TitleSmall" parent="TextAppearance.MaterialComponents.Subtitle1">
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="TextAppearance.Muebleria.TitleMedium" parent="TextAppearance.MaterialComponents.Headline6">
+        <item name="android:textSize">22sp</item>
+    </style>
+
+    <style name="TextAppearance.Muebleria.HeadlineSmall" parent="TextAppearance.MaterialComponents.Headline5">
+        <item name="android:textSize">26sp</item>
+    </style>
+</resources>

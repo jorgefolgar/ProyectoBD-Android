@@ -8,7 +8,7 @@ Requisitos
 
 Primer arranque
 ---------------
-1. Copiar "local.properties.example" a "local.properties" y editar `sdk.dir` con la ruta de tu Android SDK.
+1. Copiar "local.properties.example" a "local.properties" y editar sdk.dir con la ruta de tu Android SDK.
 2. Abrir esta carpeta ("ProyectoBD-Android") en Android Studio: File > Open.
 3. Si pide generar Gradle Wrapper, aceptar; o usar el menú Gradle > wrapper.
 4. Ajustar en app/build.gradle.kts la constante API_BASE_URL (debe terminar en /) cuando tengáis la API.

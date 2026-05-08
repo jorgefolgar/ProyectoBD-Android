@@ -13,8 +13,10 @@
         android:theme="@style/Theme.Muebleria"
         android:usesCleartextTraffic="true"
         android:networkSecurityConfig="@xml/network_security_config">
+
+        <!-- Login (launcher) -->
         <activity
-            android:name=".ui.MainActivity"
+            android:name=".ui.auth.LoginActivity"
             android:exported="true"
             android:theme="@style/Theme.Muebleria">
             <intent-filter>
@@ -22,5 +24,25 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- Register -->
+        <activity
+            android:name=".ui.auth.RegisterActivity"
+            android:theme="@style/Theme.Muebleria" />
+
+        <!-- Main (con navegación por tabs) -->
+        <activity
+            android:name=".ui.MainActivity"
+            android:theme="@style/Theme.Muebleria" />
+
+        <!-- Product Detail -->
+        <activity
+            android:name=".ui.detail.ProductDetailActivity"
+            android:theme="@style/Theme.Muebleria" />
+
+        <!-- Checkout -->
+        <activity
+            android:name=".ui.checkout.CheckoutActivity"
+            android:theme="@style/Theme.Muebleria" />
     </application>
 </manifest>

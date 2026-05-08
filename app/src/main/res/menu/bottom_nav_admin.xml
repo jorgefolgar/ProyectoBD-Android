@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Material BottomNavigationView admite como máximo 5 ítems; el resto va en AdminMoreFragment -->
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_catalog"
+        android:icon="@android:drawable/ic_menu_gallery"
+        android:title="Catálogo" />
+    <item
+        android:id="@+id/nav_cart"
+        android:icon="@android:drawable/ic_menu_agenda"
+        android:title="Carrito" />
+    <item
+        android:id="@+id/nav_clients"
+        android:icon="@android:drawable/ic_menu_my_calendar"
+        android:title="Clientes" />
+    <item
+        android:id="@+id/nav_products"
+        android:icon="@android:drawable/ic_menu_manage"
+        android:title="Productos" />
+    <item
+        android:id="@+id/nav_admin_more"
+        android:icon="@android:drawable/ic_menu_sort_by_size"
+        android:title="Más" />
+</menu>
