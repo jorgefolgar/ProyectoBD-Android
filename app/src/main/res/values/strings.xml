@@ -47,6 +47,17 @@
     <string name="report_marketing_retention">Marketing — retención</string>
     <string name="report_marketing_cohort">Marketing — cohorte</string>
     <string name="report_marketing_remarketing">Marketing — remarketing</string>
+    <string name="reports_select_report">Selecciona un reporte</string>
+    <string name="report_generate">Generar reporte</string>
+    <string name="report_start_date">Fecha inicio</string>
+    <string name="report_end_date">Fecha fin</string>
+    <string name="report_start_date_hint">Fecha inicio (toca para seleccionar)</string>
+    <string name="report_end_date_hint">Fecha fin (toca para seleccionar)</string>
+    <string name="report_city">Ciudad</string>
+    <string name="report_dates_required">Ingresa fecha inicio y fecha fin.</string>
+    <string name="report_invalid_type">Tipo de reporte inválido.</string>
+    <string name="report_row_title">Registro %1$d</string>
+    <string name="report_result_empty_title">Resultado</string>
     <string name="report_empty">Sin filas en este informe (o sin datos en el periodo).</string>
     <string name="report_error">Error al generar el informe: %1$s</string>
     <string name="prices_search_hint">Buscar por referencia, nombre o ID</string>
