@@ -1,6 +1,28 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("org.jetbrains.kotlin.kapt")
+}
+
+// API del backend (IIS): ej. HTTP en el puerto por defecto → http://192.168.x.x/
+// Sobrescribe en local.properties (no versionado): muebles.api.base.url=http://192.168.x.x/
+// Emulador apuntando al PC local (si la API sigue en tu máquina): http://10.0.2.2/
+val localProperties = Properties().apply {
+    val f = rootProject.file("local.properties")
+    if (f.exists()) f.inputStream().use { load(it) }
+}
+val apiBaseUrl: String = run {
+    val raw = localProperties.getProperty("muebles.api.base.url")?.trim().orEmpty()
+    val resolved = if (raw.isEmpty()) {
+        "http://192.168.0.40/"
+    } else if (raw.endsWith("/")) {
+        raw
+    } else {
+        "$raw/"
+    }
+    resolved
 }
 
 android {
@@ -14,13 +36,7 @@ android {
         versionCode = 1
         versionName = "1.0"
 
-        // URL base del backend (VB.NET / API). Teléfono físico en la misma red: IP del PC.
-        // Si IIS Express corre en HTTPS, usar https://IP:PUERTO/.
-        buildConfigField(
-            "String",
-            "API_BASE_URL",
-            "\"https://192.168.1.199:44355/\""
-        )
+        buildConfigField("String", "API_BASE_URL", "\"$apiBaseUrl\"")
     }
 
     buildTypes {
@@ -66,8 +82,10 @@ dependencies {
     // Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
 
-    // Image loading (para fotos de productos desde la API)
+    // Image loading + mismo OkHttp que Retrofit (token y certificado dev para fotos)
     implementation("com.github.bumptech.glide:glide:4.16.0")
+    implementation("com.github.bumptech.glide:okhttp3-integration:4.16.0")
+    kapt("com.github.bumptech.glide:compiler:4.16.0")
 
     // RecyclerView (ya viene con material, pero por claridad)
     implementation("androidx.recyclerview:recyclerview:1.3.2")

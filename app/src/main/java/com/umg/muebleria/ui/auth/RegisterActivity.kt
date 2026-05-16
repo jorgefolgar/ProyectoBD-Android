@@ -5,17 +5,18 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.umg.muebleria.R
-import com.umg.muebleria.data.model.RegisterRequest
-import com.umg.muebleria.data.repository.MuebleriaRepository
+import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.google.android.material.textfield.TextInputEditText
+import com.umg.muebleria.R
+import com.umg.muebleria.data.model.RegisterRequest
+import com.umg.muebleria.data.repository.MuebleriaRepository
+import com.umg.muebleria.localization.LanguagePicker
 import kotlinx.coroutines.launch
 
 /**
  * Pantalla de registro de nuevo cliente.
- * Delega a la API que ejecuta PKG_MUE_USUARIO.PR_USUARIO_INSERTAR.
  */
 class RegisterActivity : AppCompatActivity() {
 
@@ -25,9 +26,18 @@ class RegisterActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
 
-        setSupportActionBar(findViewById(R.id.toolbarRegister))
+        val toolbar = findViewById<MaterialToolbar>(R.id.toolbarRegister)
+        setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = "Registro de cuenta"
+
+        toolbar.setOnMenuItemClickListener { item ->
+            if (item.itemId == R.id.action_language) {
+                LanguagePicker.show(this)
+                true
+            } else {
+                false
+            }
+        }
 
         val etLogin = findViewById<TextInputEditText>(R.id.etRegLogin)
         val etPassword = findViewById<TextInputEditText>(R.id.etRegPassword)
@@ -49,7 +59,7 @@ class RegisterActivity : AppCompatActivity() {
             val lastName = etLastName.text?.toString()?.trim() ?: ""
 
             if (login.isEmpty() || password.isEmpty() || firstName.isEmpty() || lastName.isEmpty()) {
-                Toast.makeText(this, "Completa los campos obligatorios", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.register_required_fields), Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
@@ -75,10 +85,14 @@ class RegisterActivity : AppCompatActivity() {
                 btnRegister.isEnabled = true
 
                 result.onSuccess {
-                    Toast.makeText(this@RegisterActivity, "Cuenta creada. Inicia sesión.", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@RegisterActivity, getString(R.string.register_success), Toast.LENGTH_LONG).show()
                     finish()
                 }.onFailure { e ->
-                    Toast.makeText(this@RegisterActivity, e.message ?: "Error al registrar", Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        this@RegisterActivity,
+                        e.message ?: getString(R.string.register_error_generic),
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
             }
         }

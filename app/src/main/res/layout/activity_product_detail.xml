@@ -12,7 +12,8 @@
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
         android:elevation="4dp"
-        android:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar" />
+        android:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.Muebleria.ToolbarPopup" />
 
     <com.google.android.material.progressindicator.CircularProgressIndicator
         android:id="@+id/progressDetail"
@@ -148,7 +149,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="56dp"
                         android:layout_marginTop="22dp"
-                        android:text="Agregar al carrito"
+                        android:text="@string/detail_add_to_cart"
                         android:textAllCaps="false"
                         android:textSize="16sp"
                         android:visibility="gone"

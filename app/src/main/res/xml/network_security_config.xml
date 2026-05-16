@@ -1,15 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Permite tráfico cleartext en debug y confía en certificados del sistema (IIS Express self-signed). -->
+<!--
+  Politica de red:
+  - base-config: solo HTTPS y certificados del sistema (release-friendly).
+  - domain-config: hosts de LAN/dev del proyecto pueden usar cleartext y
+    confiar en certificados de usuario (cert self-signed de IIS Express).
+  Si usas muebles.api.base.url en local.properties con otra IP, agrega aqui
+  un <domain> con esa IP para que el certificado de desarrollo sea aceptado.
+-->
 <network-security-config>
+    <!-- HTTP en IIS (puerto 80) y certificados de desarrollo en la LAN del proyecto -->
     <base-config cleartextTrafficPermitted="true">
         <trust-anchors>
             <certificates src="system" />
             <certificates src="user" />
         </trust-anchors>
     </base-config>
+
     <domain-config cleartextTrafficPermitted="true">
         <domain includeSubdomains="true">10.0.2.2</domain>
         <domain includeSubdomains="true">localhost</domain>
+        <domain includeSubdomains="true">127.0.0.1</domain>
+        <!-- Servidores Oracle + PC que hospeda la API Web en la LAN del proyecto -->
+        <domain includeSubdomains="true">192.168.0.25</domain>
+        <domain includeSubdomains="true">192.168.0.30</domain>
+        <domain includeSubdomains="true">192.168.0.40</domain>
+        <domain includeSubdomains="true">192.168.0.199</domain>
         <trust-anchors>
             <certificates src="system" />
             <certificates src="user" />

@@ -1,5 +1,6 @@
 package com.umg.muebleria.ui.cart
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,17 +9,18 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.umg.muebleria.R
 import com.umg.muebleria.data.model.CarritoItem
+import com.umg.muebleria.util.LocaleCurrency
 import java.text.NumberFormat
-import java.util.Locale
 
 class CarritoAdapter(
+    context: Context,
     private val items: List<CarritoItem>,
     private val onIncrement: (CarritoItem) -> Unit,
     private val onDecrement: (CarritoItem) -> Unit,
     private val onRemove: (CarritoItem) -> Unit
 ) : RecyclerView.Adapter<CarritoAdapter.VH>() {
 
-    private val fmt = NumberFormat.getCurrencyInstance(Locale.US)
+    private val fmt: NumberFormat = LocaleCurrency.forContext(context)
 
     inner class VH(view: View) : RecyclerView.ViewHolder(view) {
         val tvName: TextView = view.findViewById(R.id.tvCartItemName)

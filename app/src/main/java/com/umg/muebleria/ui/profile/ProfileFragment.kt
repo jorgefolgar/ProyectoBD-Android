@@ -7,11 +7,13 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.google.android.material.textfield.TextInputEditText
+import com.umg.muebleria.MuebleriaApp
 import com.umg.muebleria.R
 import com.umg.muebleria.data.model.PerfilDto
 import com.umg.muebleria.data.model.ProfileUpdateRequest
@@ -90,16 +92,37 @@ class ProfileFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             repository.getProfile()
                 .onSuccess { p ->
+                    if (!isAdded) return@onSuccess
                     loadedProfile = p
                     progress.visibility = View.GONE
                     bindProfileToViews(p)
+                    syncToolbarWithProfile(p)
                     showReadMode()
                 }
                 .onFailure {
+                    if (!isAdded) return@onFailure
                     progress.visibility = View.GONE
                     Toast.makeText(requireContext(), R.string.profile_load_error, Toast.LENGTH_LONG).show()
                 }
         }
+    }
+
+    private fun displayNameFromProfile(p: PerfilDto): String {
+        return listOfNotNull(
+            p.firstName.trim().takeIf { it.isNotEmpty() },
+            p.middleName?.trim()?.takeIf { it.isNotEmpty() },
+            p.lastName.trim().takeIf { it.isNotEmpty() },
+            p.secondLastName?.trim()?.takeIf { it.isNotEmpty() }
+        ).joinToString(" ")
+    }
+
+    private fun syncToolbarWithProfile(p: PerfilDto) {
+        val name = displayNameFromProfile(p)
+        if (name.isBlank()) return
+        val act = activity as? AppCompatActivity ?: return
+        val session = (act.application as MuebleriaApp).sessionManager
+        session.updateUserFullName(name)
+        act.supportActionBar?.subtitle = name
     }
 
     private fun dashIfBlank(value: String?): String {
@@ -173,11 +196,13 @@ class ProfileFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             repository.updateProfile(request)
                 .onSuccess {
+                    if (!isAdded) return@onSuccess
                     progress.visibility = View.GONE
                     Toast.makeText(requireContext(), R.string.profile_updated, Toast.LENGTH_SHORT).show()
                     loadProfile()
                 }
                 .onFailure { e ->
+                    if (!isAdded) return@onFailure
                     progress.visibility = View.GONE
                     Toast.makeText(
                         requireContext(),

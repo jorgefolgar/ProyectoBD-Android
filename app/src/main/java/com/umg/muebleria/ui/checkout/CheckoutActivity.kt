@@ -4,9 +4,17 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
-import android.widget.*
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.LinearLayout
+import android.widget.Spinner
+import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.view.ContextThemeWrapper
 import androidx.lifecycle.lifecycleScope
+import com.google.android.material.R as MaterialR
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.google.android.material.textfield.TextInputEditText
@@ -16,19 +24,16 @@ import com.umg.muebleria.data.model.CheckoutItemRequest
 import com.umg.muebleria.data.model.CheckoutRequest
 import com.umg.muebleria.data.model.MetodoPagoDto
 import com.umg.muebleria.data.repository.MuebleriaRepository
+import com.umg.muebleria.util.LocaleCurrency
 import kotlinx.coroutines.launch
-import java.text.NumberFormat
 import java.util.Calendar
-import java.util.Locale
 
 /**
- * Pantalla de checkout. Selecciona método de pago, valida tarjeta si aplica,
- * y ejecuta la compra vía API (transacción ACID en Oracle).
+ * Pantalla de checkout: método de pago, tarjeta si aplica, compra vía API.
  */
 class CheckoutActivity : AppCompatActivity() {
 
     private val repository = MuebleriaRepository()
-    private val currencyFormat = NumberFormat.getCurrencyInstance(Locale.US)
     private var methods: List<MetodoPagoDto> = emptyList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,16 +41,9 @@ class CheckoutActivity : AppCompatActivity() {
         setContentView(R.layout.activity_checkout)
         setSupportActionBar(findViewById(R.id.toolbarCheckout))
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = "Confirmar compra"
+        supportActionBar?.title = getString(R.string.checkout_title)
 
         val session = (application as MuebleriaApp).sessionManager
-        val cart = session.getCart()
-
-        if (cart.isEmpty()) {
-            Toast.makeText(this, "Carrito vacío", Toast.LENGTH_SHORT).show()
-            finish()
-            return
-        }
 
         val tvTotal = findViewById<TextView>(R.id.tvCheckoutTotal)
         val tvItems = findViewById<TextView>(R.id.tvCheckoutItems)
@@ -58,10 +56,6 @@ class CheckoutActivity : AppCompatActivity() {
         val btnConfirm = findViewById<MaterialButton>(R.id.btnConfirmPurchase)
         val progress = findViewById<CircularProgressIndicator>(R.id.progressCheckout)
 
-        tvTotal.text = "Total: ${currencyFormat.format(session.getCartTotal())}"
-        tvItems.text = cart.joinToString("\n") { "${it.quantity}x ${it.name} — ${currencyFormat.format(it.unitPrice * it.quantity)}" }
-
-        // Formatea automáticamente MM/AA: inserta la "/" después de los primeros 2 dígitos.
         var isFormattingExpiry = false
         etCardExpiry.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
@@ -84,81 +78,129 @@ class CheckoutActivity : AppCompatActivity() {
 
                 isFormattingExpiry = true
                 etCardExpiry.setText(formatted)
-                // Posicionar el cursor al final para evitar saltos.
                 etCardExpiry.setSelection(formatted.length)
                 isFormattingExpiry = false
             }
         })
 
-        // Cargar métodos de pago
         lifecycleScope.launch {
+            progress.visibility = View.VISIBLE
+            repository.refreshCartFromServer(session)
             repository.listPaymentMethods().onSuccess { list ->
                 methods = list
-                val adapter = ArrayAdapter(this@CheckoutActivity, android.R.layout.simple_spinner_item, list.map { it.paymentMethodName })
+                val adapter = ArrayAdapter(
+                    this@CheckoutActivity,
+                    android.R.layout.simple_spinner_item,
+                    list.map { it.paymentMethodName }
+                )
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                 spinnerPayment.adapter = adapter
             }
-        }
+            progress.visibility = View.GONE
 
-        spinnerPayment.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, v: View?, pos: Int, id: Long) {
-                val name = methods.getOrNull(pos)?.paymentMethodName ?: ""
-                cardLayout.visibility = if (name.contains("tarjeta", ignoreCase = true)) View.VISIBLE else View.GONE
-            }
-            override fun onNothingSelected(parent: AdapterView<*>?) {}
-        }
-
-        btnConfirm.setOnClickListener {
-            val selectedIndex = spinnerPayment.selectedItemPosition
-            if (selectedIndex < 0 || selectedIndex >= methods.size) {
-                Toast.makeText(this, "Selecciona forma de pago", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
+            val cart = session.getCart()
+            if (cart.isEmpty()) {
+                Toast.makeText(this@CheckoutActivity, getString(R.string.cart_empty_toast), Toast.LENGTH_SHORT).show()
+                finish()
+                return@launch
             }
 
-            val method = methods[selectedIndex]
-            val isCardPayment = method.paymentMethodName.contains("tarjeta", ignoreCase = true)
-            if (isCardPayment) {
-                val validationError = validateCardFields(
-                    holder = etCardHolder.text?.toString(),
-                    number = etCardNumber.text?.toString(),
-                    expiry = etCardExpiry.text?.toString(),
-                    cvv = etCardCvv.text?.toString()
-                )
-                if (validationError != null) {
-                    Toast.makeText(this, validationError, Toast.LENGTH_LONG).show()
+            val fmt = LocaleCurrency.forContext(this@CheckoutActivity)
+            tvTotal.text = getString(R.string.cart_total_format, fmt.format(session.getCartTotal()))
+            tvItems.text = cart.joinToString("\n") { "${it.quantity}x ${it.name} — ${fmt.format(it.unitPrice * it.quantity)}" }
+
+            spinnerPayment.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(parent: AdapterView<*>?, v: View?, pos: Int, id: Long) {
+                    val name = methods.getOrNull(pos)?.paymentMethodName ?: ""
+                    cardLayout.visibility = if (isCardLikePayment(name)) View.VISIBLE else View.GONE
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>?) {}
+            }
+
+            btnConfirm.setOnClickListener {
+                val selectedIndex = spinnerPayment.selectedItemPosition
+                if (selectedIndex < 0 || selectedIndex >= methods.size) {
+                    Toast.makeText(this@CheckoutActivity, getString(R.string.checkout_select_payment), Toast.LENGTH_SHORT).show()
                     return@setOnClickListener
                 }
-            }
 
-            val request = CheckoutRequest(
-                paymentMethodId = method.paymentMethodId,
-                cardHolderName = etCardHolder.text?.toString(),
-                cardNumber = etCardNumber.text?.toString(),
-                cardExpiry = etCardExpiry.text?.toString(),
-                cardCvv = etCardCvv.text?.toString(),
-                items = cart.map { CheckoutItemRequest(it.productId, it.quantity) }
-            )
+                val method = methods[selectedIndex]
+                if (isCardLikePayment(method.paymentMethodName)) {
+                    val validationError = validateCardFields(
+                        holder = etCardHolder.text?.toString(),
+                        number = etCardNumber.text?.toString(),
+                        expiry = etCardExpiry.text?.toString(),
+                        cvv = etCardCvv.text?.toString()
+                    )
+                    if (validationError != null) {
+                        Toast.makeText(this@CheckoutActivity, validationError, Toast.LENGTH_LONG).show()
+                        return@setOnClickListener
+                    }
+                }
 
-            progress.visibility = View.VISIBLE
-            btnConfirm.isEnabled = false
+                val currentCart = session.getCart()
+                if (currentCart.isEmpty()) {
+                    Toast.makeText(this@CheckoutActivity, getString(R.string.cart_empty_toast), Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
 
-            lifecycleScope.launch {
-                val result = repository.checkout(request)
-                progress.visibility = View.GONE
-                btnConfirm.isEnabled = true
+                val request = CheckoutRequest(
+                    paymentMethodId = method.paymentMethodId,
+                    cardHolderName = etCardHolder.text?.toString(),
+                    cardNumber = etCardNumber.text?.toString(),
+                    cardExpiry = etCardExpiry.text?.toString(),
+                    cardCvv = etCardCvv.text?.toString(),
+                    items = currentCart.map { CheckoutItemRequest(it.productId, it.quantity) }
+                )
 
-                result.onSuccess { response ->
-                    session.clearCart()
-                    Toast.makeText(this@CheckoutActivity, response.message, Toast.LENGTH_LONG).show()
-                    finish()
-                }.onFailure { e ->
-                    Toast.makeText(this@CheckoutActivity, "Error: ${e.message}", Toast.LENGTH_LONG).show()
+                progress.visibility = View.VISIBLE
+                btnConfirm.isEnabled = false
+
+                lifecycleScope.launch {
+                    val result = repository.checkout(request)
+                    progress.visibility = View.GONE
+                    btnConfirm.isEnabled = true
+
+                    result.onSuccess { response ->
+                        session.clearCart()
+                        if (isFinishing) return@onSuccess
+                        val msg = response.message?.trim().orEmpty().ifEmpty {
+                            getString(R.string.checkout_success_fallback)
+                        }
+                        val dialogCtx = ContextThemeWrapper(
+                            this@CheckoutActivity,
+                            MaterialR.style.Theme_MaterialComponents_Light_Dialog_Alert
+                        )
+                        AlertDialog.Builder(dialogCtx)
+                            .setTitle(R.string.checkout_success_title)
+                            .setMessage(msg)
+                            .setCancelable(false)
+                            .setPositiveButton(R.string.accept) { _, _ ->
+                                if (!isFinishing) finish()
+                            }
+                            .show()
+                    }.onFailure { e ->
+                        Toast.makeText(
+                            this@CheckoutActivity,
+                            getString(R.string.checkout_error_format, e.message ?: ""),
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
                 }
             }
         }
     }
 
-    override fun onSupportNavigateUp(): Boolean { finish(); return true }
+    override fun onSupportNavigateUp(): Boolean {
+        finish()
+        return true
+    }
+
+    private fun isCardLikePayment(name: String): Boolean {
+        val n = name.lowercase()
+        return n.contains("tarjeta") || n.contains("card")
+    }
 
     private fun validateCardFields(
         holder: String?,
@@ -171,22 +213,22 @@ class CheckoutActivity : AppCompatActivity() {
         val expiryDigits = expiry.orEmpty().filter { it.isDigit() }
         val cvvDigits = cvv.orEmpty().filter { it.isDigit() }
 
-        if (holderTrim.isBlank()) return "Ingresa el nombre del titular."
-        if (numberDigits.length !in 13..19) return "Número de tarjeta inválido."
-        if (expiryDigits.length != 4) return "Fecha inválida. Usa formato MM/AA."
-        if (cvvDigits.length != 3) return "CVV inválido."
+        if (holderTrim.isBlank()) return getString(R.string.card_holder_required)
+        if (numberDigits.length !in 13..19) return getString(R.string.card_number_invalid)
+        if (expiryDigits.length != 4) return getString(R.string.card_expiry_invalid)
+        if (cvvDigits.length != 3) return getString(R.string.card_cvv_invalid)
 
-        val month = expiryDigits.substring(0, 2).toIntOrNull() ?: return "Mes de expiración inválido."
-        val year2 = expiryDigits.substring(2, 4).toIntOrNull() ?: return "Año de expiración inválido."
+        val month = expiryDigits.substring(0, 2).toIntOrNull() ?: return getString(R.string.card_month_invalid)
+        val year2 = expiryDigits.substring(2, 4).toIntOrNull() ?: return getString(R.string.card_year_invalid)
 
-        if (month !in 1..12) return "Mes de expiración inválido (01-12)."
+        if (month !in 1..12) return getString(R.string.card_month_range_invalid)
 
         val now = Calendar.getInstance()
         val currentYear2 = now.get(Calendar.YEAR) % 100
         val currentMonth = now.get(Calendar.MONTH) + 1
 
-        if (year2 < currentYear2) return "La tarjeta está vencida."
-        if (year2 == currentYear2 && month < currentMonth) return "La tarjeta está vencida."
+        if (year2 < currentYear2) return getString(R.string.card_expired)
+        if (year2 == currentYear2 && month < currentMonth) return getString(R.string.card_expired)
 
         return null
     }

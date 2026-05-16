@@ -12,7 +12,10 @@
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
         android:elevation="4dp"
-        android:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar" />
+        android:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar"
+        app:title="@string/register_title"
+        app:menu="@menu/register_toolbar_menu"
+        app:popupTheme="@style/ThemeOverlay.Muebleria.ToolbarPopup" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -47,7 +50,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Datos de acceso y contacto"
+                        android:text="@string/register_section_access"
                         android:textAppearance="?attr/textAppearanceTitleMedium"
                         android:textColor="@color/text_primary" />
 
@@ -55,7 +58,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
-                        android:text="Completa los campos obligatorios (*) para crear tu cuenta."
+                        android:text="@string/register_intro"
                         android:textAppearance="?attr/textAppearanceBodySmall"
                         android:textColor="@color/text_secondary" />
 
@@ -64,7 +67,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
-                        android:hint="Usuario *">
+                        android:hint="@string/register_hint_login_required">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etRegLogin"
@@ -78,7 +81,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:hint="Contraseña *"
+                        android:hint="@string/register_hint_password_required"
                         app:endIconMode="password_toggle">
 
                         <com.google.android.material.textfield.TextInputEditText
@@ -93,7 +96,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:hint="Primer nombre *">
+                        android:hint="@string/register_hint_first_name_required">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etRegFirstName"
@@ -107,7 +110,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:hint="Primer apellido *">
+                        android:hint="@string/register_hint_last_name_required">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etRegLastName"
@@ -121,7 +124,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:hint="No. Documento">
+                        android:hint="@string/register_hint_document">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etRegDocNumber"
@@ -135,7 +138,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:hint="Teléfono">
+                        android:hint="@string/profile_label_phone">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etRegPhone"
@@ -149,7 +152,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:hint="Correo electrónico">
+                        android:hint="@string/profile_label_email">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etRegEmail"
@@ -163,7 +166,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:hint="Ciudad">
+                        android:hint="@string/profile_label_city">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etRegCity"
@@ -177,7 +180,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:hint="Departamento">
+                        android:hint="@string/register_hint_department">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etRegDepartment"
@@ -191,7 +194,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:hint="Municipio">
+                        android:hint="@string/register_hint_municipality">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etRegMunicipality"
@@ -205,7 +208,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="56dp"
                         android:layout_marginTop="24dp"
-                        android:text="Crear cuenta"
+                        android:text="@string/register_button_submit"
                         android:textAllCaps="false"
                         android:textSize="16sp"
                         app:cornerRadius="12dp"

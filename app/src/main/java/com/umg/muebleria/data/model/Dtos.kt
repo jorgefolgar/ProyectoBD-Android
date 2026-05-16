@@ -1,6 +1,5 @@
 package com.umg.muebleria.data.model
 
-import com.google.gson.JsonArray
 import com.google.gson.annotations.SerializedName
 
 /** Respuesta del login con token de autenticación */
@@ -74,7 +73,7 @@ data class ProductoDetalleDto(
     @SerializedName(value = "isAvailable", alternate = ["IsAvailable"]) val isAvailable: Boolean = false
 )
 
-/** Item del carrito (client-side) */
+/** Item del carrito (client-side cache; la fuente de verdad usa la API cuando hay sesión). */
 data class CarritoItem(
     val productId: Int,
     val reference: String,
@@ -85,6 +84,37 @@ data class CarritoItem(
 ) {
     fun recalculate() { lineTotal = unitPrice * quantity }
 }
+
+/** Respuesta GET/POST cart del servidor (camelCase/PascalCase). */
+data class CartLineDto(
+    @SerializedName(value = "productId", alternate = ["ProductId"]) val productId: Int = 0,
+    @SerializedName(value = "reference", alternate = ["Reference"]) val reference: String? = null,
+    @SerializedName(value = "name", alternate = ["Name"]) val name: String? = null,
+    @SerializedName(value = "unitPrice", alternate = ["UnitPrice"]) val unitPrice: Double = 0.0,
+    @SerializedName(value = "quantity", alternate = ["Quantity"]) val quantity: Int = 0,
+    @SerializedName(value = "lineTotal", alternate = ["LineTotal"]) val lineTotal: Double? = null
+)
+
+fun CartLineDto.toCarritoItem(): CarritoItem {
+    val item = CarritoItem(
+        productId = productId,
+        reference = reference.orEmpty(),
+        name = name.orEmpty(),
+        unitPrice = unitPrice,
+        quantity = quantity,
+        lineTotal = lineTotal ?: unitPrice * quantity
+    )
+    item.recalculate()
+    return item
+}
+
+/** Body POST api/cart/add (cantidad sumada al total existente). */
+data class CartAddBody(
+    val productId: Int,
+    val quantity: Int = 1
+)
+
+data class CartProductIdBody(val productId: Int)
 
 /** Request para checkout */
 data class CheckoutRequest(
@@ -112,7 +142,8 @@ data class MetodoPagoDto(
 data class CheckoutResponse(
     val orderId: Int = 0,
     val total: Double = 0.0,
-    val message: String = ""
+    /** Gson puede dejar null si el JSON omite el campo o envía null. */
+    val message: String? = null
 )
 
 /** Perfil de usuario */
@@ -161,75 +192,6 @@ data class ChangePasswordRequest(
 data class ProfesionDto(
     val professionId: Int = 0,
     val name: String = ""
-)
-
-/** Cliente (admin) */
-data class ClienteDto(
-    @SerializedName(value = "userId", alternate = ["UserId"]) val userId: Int = 0,
-    @SerializedName(value = "roleId", alternate = ["RoleId"]) val roleId: Int = 0,
-    @SerializedName(value = "login", alternate = ["Login"]) val login: String = "",
-    @SerializedName(value = "documentTypeId", alternate = ["DocumentTypeId"]) val documentTypeId: Int = 0,
-    @SerializedName(value = "documentNumber", alternate = ["DocumentNumber"]) val documentNumber: Long? = null,
-    @SerializedName(value = "firstName", alternate = ["FirstName"]) val firstName: String = "",
-    @SerializedName(value = "middleName", alternate = ["MiddleName"]) val middleName: String? = null,
-    @SerializedName(value = "lastName", alternate = ["LastName"]) val lastName: String = "",
-    @SerializedName(value = "secondLastName", alternate = ["SecondLastName"]) val secondLastName: String? = null,
-    @SerializedName(value = "homePhone", alternate = ["HomePhone"]) val homePhone: Long? = null,
-    @SerializedName(value = "mobilePhone", alternate = ["MobilePhone"]) val mobilePhone: Long? = null,
-    @SerializedName(value = "municipality", alternate = ["Municipality"]) val municipality: String? = null,
-    @SerializedName(value = "department", alternate = ["Department"]) val department: String? = null,
-    @SerializedName(value = "city", alternate = ["City"]) val city: String? = null,
-    @SerializedName(value = "country", alternate = ["Country"]) val country: String? = null,
-    @SerializedName(value = "email", alternate = ["Email"]) val email: String = "",
-    @SerializedName("nit") val nit: String? = null,
-    @SerializedName(value = "userType", alternate = ["UserType"]) val userType: String? = null,
-    @SerializedName(value = "isActive", alternate = ["IsActive"]) val isActive: Int = 1,
-    @SerializedName(value = "professionId", alternate = ["ProfessionId"]) val professionId: Int? = null,
-    val password: String? = null
-)
-
-/** Producto admin (edición) */
-data class ProductoAdminDto(
-    val productId: Int = 0,
-    val categoryId: Int? = null,
-    val reference: String = "",
-    val name: String = "",
-    val description: String? = null,
-    val productMaterial: String? = null,
-    val unitPrice: Double? = null,
-    val stock: Int? = null,
-    val heightCm: Double? = null,
-    val widthCm: Double? = null,
-    val depthCm: Double? = null,
-    val color: String? = null,
-    val weightGrams: Double? = null,
-    val typeName: String? = null,
-    val hasPhoto: Boolean = false
-)
-
-/** Registro de precio */
-data class PrecioDto(
-    val priceId: Int = 0,
-    val productId: Int = 0,
-    val productName: String? = null,
-    val productReference: String? = null,
-    val value: Double? = null,
-    val stock: Int? = null,
-    val startDate: String? = null,
-    val endDate: String? = null,
-    val active: Int = 1
-)
-
-/**
- * Reportes JSON desde Web API (VB tipos anónimos → propiedades en minúsculas `title`/`rows`).
- * También se aceptan `Title`/`Rows` por compatibilidad.
- * `rows` como JsonArray evita fallos de Gson con Map<String, Any>.
- */
-data class ReporteResponse(
-    @SerializedName(value = "title", alternate = ["Title"])
-    val title: String = "",
-    @SerializedName(value = "rows", alternate = ["Rows"])
-    val rows: JsonArray? = null
 )
 
 /** Respuesta genérica con mensaje */

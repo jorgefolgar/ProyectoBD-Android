@@ -12,7 +12,7 @@
         android:paddingHorizontal="@dimen/padding_screen_horizontal"
         android:paddingTop="20dp"
         android:paddingBottom="8dp"
-        android:text="Carrito de compras"
+        android:text="@string/cart_title"
         android:textAppearance="?attr/textAppearanceHeadlineSmall"
         android:textColor="@color/text_primary" />
 
@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:padding="36dp"
-        android:text="Tu carrito está vacío"
+        android:text="@string/cart_empty_message"
         android:textAppearance="?attr/textAppearanceBodyLarge"
         android:textColor="@color/text_secondary"
         android:visibility="gone" />
@@ -67,7 +67,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="54dp"
                 android:layout_marginTop="12dp"
-                android:text="Proceder al pago"
+                android:text="@string/cart_checkout"
                 android:textAllCaps="false"
                 android:textSize="16sp"
                 app:cornerRadius="12dp"

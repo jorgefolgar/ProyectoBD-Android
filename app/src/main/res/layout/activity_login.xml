@@ -52,7 +52,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="28dp"
-                    android:hint="Usuario">
+                    android:hint="@string/login_hint_user">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etLogin"
@@ -67,7 +67,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
-                    android:hint="Contraseña"
+                    android:hint="@string/login_hint_password"
                     app:endIconMode="password_toggle">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -83,7 +83,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
                     android:layout_marginTop="24dp"
-                    android:text="Iniciar sesión"
+                    android:text="@string/login_button"
                     android:textAllCaps="false"
                     android:textSize="16sp"
                     app:cornerRadius="12dp"
@@ -104,9 +104,19 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="¿No tienes cuenta? Regístrate"
+                    android:text="@string/login_register_prompt"
                     android:textAllCaps="false"
                     android:textColor="@color/purple_500" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnLanguage"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/action_language"
+                    android:textAllCaps="false"
+                    android:textColor="@color/text_secondary" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
     </LinearLayout>

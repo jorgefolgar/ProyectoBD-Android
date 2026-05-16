@@ -20,5 +20,33 @@
         <item name="textAppearanceTitleSmall">@style/TextAppearance.Muebleria.TitleSmall</item>
         <item name="textAppearanceTitleMedium">@style/TextAppearance.Muebleria.TitleMedium</item>
         <item name="textAppearanceHeadlineSmall">@style/TextAppearance.Muebleria.HeadlineSmall</item>
+        <item name="materialAlertDialogTheme">@style/ThemeOverlay.Muebleria.MaterialAlertDialog</item>
+    </style>
+
+    <!-- Menú overflow (⋮) del toolbar: fondo claro + texto oscuro (Dark.ActionBar deja el popup ilegible). -->
+    <style name="ThemeOverlay.Muebleria.ToolbarPopup" parent="ThemeOverlay.MaterialComponents.Light">
+        <item name="android:colorBackground">@color/surface_container</item>
+        <item name="colorSurface">@color/surface_container</item>
+        <item name="android:textColorPrimary">@color/text_primary</item>
+        <item name="android:textColorSecondary">@color/text_secondary</item>
+        <item name="colorControlNormal">@color/text_primary</item>
+    </style>
+
+    <!-- Diálogos Material: texto y superficie legibles (evita ítems “invisibles” con tema claro). -->
+    <style name="ThemeOverlay.Muebleria.MaterialAlertDialog" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+        <item name="colorSurface">@color/surface_container</item>
+        <item name="android:textColorPrimary">@color/text_primary</item>
+        <item name="android:textColorSecondary">@color/text_secondary</item>
+        <item name="materialAlertDialogTitleTextStyle">@style/MaterialAlertDialog.Muebleria.Title.Text</item>
+    </style>
+
+    <!--
+      materialAlertDialogTitleTextStyle requiere un estilo de TextView completo
+      (no un TextAppearance) porque el padre fija layout_width/layout_height del TextView del título.
+      Heredar de MaterialAlertDialog.MaterialComponents.Title.Text evita
+      "UnsupportedOperationException: You must supply a layout_width attribute" al inflar el diálogo.
+    -->
+    <style name="MaterialAlertDialog.Muebleria.Title.Text" parent="MaterialAlertDialog.MaterialComponents.Title.Text">
+        <item name="android:textColor">@color/text_primary</item>
     </style>
 </resources>

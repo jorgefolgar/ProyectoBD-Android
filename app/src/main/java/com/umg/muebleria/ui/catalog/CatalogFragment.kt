@@ -11,6 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.progressindicator.CircularProgressIndicator
+import com.umg.muebleria.MuebleriaApp
 import com.umg.muebleria.R
 import com.umg.muebleria.data.model.ProductoDto
 import com.umg.muebleria.data.repository.MuebleriaRepository
@@ -32,22 +33,38 @@ class CatalogFragment : Fragment() {
         recyclerView = view.findViewById(R.id.rvCatalog)
         progress = view.findViewById(R.id.progressCatalog)
         recyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
+    }
+
+    override fun onResume() {
+        super.onResume()
         loadProducts()
     }
 
     private fun loadProducts() {
-        progress.visibility = View.VISIBLE
         viewLifecycleOwner.lifecycleScope.launch {
-            val result = repository.listCatalog()
-            progress.visibility = View.GONE
-            result.onSuccess { products ->
-                recyclerView.adapter = CatalogoAdapter(products) { product ->
-                    val intent = Intent(requireContext(), ProductDetailActivity::class.java)
-                    intent.putExtra("productId", product.productId)
-                    startActivity(intent)
+            progress.visibility = View.VISIBLE
+            try {
+                val result = repository.listCatalog()
+                result.onSuccess { products ->
+                    if (!isAdded) return@onSuccess
+                    val app = requireActivity().application as MuebleriaApp
+                    app.notifyProductImagesMayHaveChanged()
+                    val epoch = app.productImagesLoadEpoch
+                    recyclerView.adapter = CatalogoAdapter(products, epoch) { product: ProductoDto ->
+                        val intent = Intent(requireContext(), ProductDetailActivity::class.java)
+                        intent.putExtra("productId", product.productId)
+                        startActivity(intent)
+                    }
+                }.onFailure { e ->
+                    if (!isAdded) return@launch
+                    Toast.makeText(
+                        requireContext(),
+                        getString(R.string.catalog_load_error, e.message ?: ""),
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
-            }.onFailure { e ->
-                Toast.makeText(requireContext(), "Error: ${e.message}", Toast.LENGTH_LONG).show()
+            } finally {
+                if (isAdded) progress.visibility = View.GONE
             }
         }
     }

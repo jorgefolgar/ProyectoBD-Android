@@ -15,6 +15,8 @@ class SessionManager(context: Context) {
 
     private val prefs: SharedPreferences =
         context.getSharedPreferences("muebleria_session", Context.MODE_PRIVATE)
+    private val cartPrefs: SharedPreferences =
+        context.getSharedPreferences("muebleria_cart", Context.MODE_PRIVATE)
     private val gson = Gson()
 
     companion object {
@@ -50,6 +52,11 @@ class SessionManager(context: Context) {
     fun getUserEmail(): String = prefs.getString(KEY_USER_EMAIL, "") ?: ""
     fun getUserFullName(): String = prefs.getString(KEY_USER_NAME, "") ?: ""
 
+    /** Actualiza el nombre mostrado en la UI tras cambios en el perfil (p. ej. desde la API). */
+    fun updateUserFullName(fullName: String) {
+        prefs.edit().putString(KEY_USER_NAME, fullName.trim()).apply()
+    }
+
     fun isLoggedIn(): Boolean = !getToken().isNullOrBlank()
 
     fun isAdmin(): Boolean {
@@ -59,26 +66,45 @@ class SessionManager(context: Context) {
     }
 
     fun logout() {
-        prefs.edit().clear().apply()
+        // Borrar caché local del carrito: la verdad está en servidor; evita mezclar cuentas en el mismo dispositivo.
+        clearCart()
+        // commit() evita que otra pantalla lea token aún presente antes de que apply termine en memoria/disco.
+        prefs.edit()
+            .remove(KEY_TOKEN)
+            .remove(KEY_USER_ID)
+            .remove(KEY_USER_LOGIN)
+            .remove(KEY_USER_ROLE)
+            .remove(KEY_USER_TYPE)
+            .remove(KEY_USER_EMAIL)
+            .remove(KEY_USER_NAME)
+            .commit()
     }
 
     // ────── Carrito (client-side) ──────
 
     fun getCart(): MutableList<CarritoItem> {
-        val json = prefs.getString(KEY_CART, null) ?: return mutableListOf()
+        val json = cartPrefs.getString(KEY_CART, null)
+            ?: prefs.getString(KEY_CART, null) // migración desde prefs de sesión
+            ?: return mutableListOf()
         return try {
             val type = object : TypeToken<MutableList<CarritoItem>>() {}.type
-            gson.fromJson(json, type) ?: mutableListOf()
+            val cart = gson.fromJson<MutableList<CarritoItem>>(json, type) ?: mutableListOf()
+            if (cart.isNotEmpty() && !cartPrefs.contains(KEY_CART)) {
+                saveCart(cart)
+                prefs.edit().remove(KEY_CART).apply()
+            }
+            cart
         } catch (_: Exception) {
             mutableListOf()
         }
     }
 
     fun saveCart(cart: List<CarritoItem>) {
-        prefs.edit().putString(KEY_CART, gson.toJson(cart)).apply()
+        cartPrefs.edit().putString(KEY_CART, gson.toJson(cart)).commit()
     }
 
     fun clearCart() {
+        cartPrefs.edit().remove(KEY_CART).commit()
         prefs.edit().remove(KEY_CART).apply()
     }
 

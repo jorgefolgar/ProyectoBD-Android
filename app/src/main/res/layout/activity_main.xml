@@ -13,6 +13,7 @@
         android:background="?attr/colorPrimary"
         android:elevation="4dp"
         android:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.Muebleria.ToolbarPopup"
         app:titleTextAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
         app:subtitleTextAppearance="@style/TextAppearance.MaterialComponents.Caption" />
 

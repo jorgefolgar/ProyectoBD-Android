@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Muebleria de los Alpes</string>
+    <string name="main_welcome">Shopping portal — connects to the backend API for catalog and cart.</string>
+    <string name="main_hint">Per the spec: data access only via Oracle stored procedures; the app consumes the API that invokes them.</string>
+    <string name="api_base_label">API base: %1$s</string>
+    <string name="action_logout">Sign out</string>
+    <string name="action_language">Language</string>
+    <string name="language_title">App language</string>
+    <string name="language_spanish">Spanish</string>
+    <string name="language_english">English</string>
+    <string name="language_system">System default</string>
+    <string name="logout_confirm_title">Sign out</string>
+    <string name="logout_confirm_message">Are you sure you want to sign out?</string>
+    <string name="accept">Accept</string>
+    <string name="cancel">Cancel</string>
+
+    <string name="login_hint_user">Username</string>
+    <string name="login_hint_password">Password</string>
+    <string name="login_button">Sign in</string>
+    <string name="login_register_prompt">No account? Register</string>
+    <string name="login_required_fields">Enter username and password</string>
+    <string name="login_welcome">Welcome, %1$s</string>
+    <string name="login_error_credentials">Invalid credentials</string>
+    <string name="login_error_network_title">Cannot reach server</string>
+    <string name="login_error_network_message">Could not connect to:\n\n%1$s\n\n• Phone must be on the same Wi‑Fi as the server.\n• Try opening that address in the phone browser.\n• On the server, allow port 80 through the firewall.</string>
+    <string name="login_error_ssl_title">Server certificate</string>
+    <string name="login_error_ssl_message">Could not validate the certificate for:\n\n%1$s\n\nUse HTTP (http://IP/) in local.properties or disable HTTPS redirect in IIS.</string>
+    <string name="login_error_detail">Technical detail: %1$s</string>
+
+    <string name="register_title">Create account</string>
+    <string name="register_section_access">Access and contact details</string>
+    <string name="register_intro">Fill in the required fields (*) to create your account.</string>
+    <string name="register_hint_login_required">Username *</string>
+    <string name="register_hint_password_required">Password *</string>
+    <string name="register_hint_first_name_required">First name *</string>
+    <string name="register_hint_last_name_required">Last name *</string>
+    <string name="register_hint_document">Document no.</string>
+    <string name="register_hint_department">Department / state</string>
+    <string name="register_hint_municipality">Municipality</string>
+    <string name="register_button_submit">Sign up</string>
+    <string name="register_required_fields">Fill in the required fields</string>
+    <string name="register_success">Account created. Please sign in.</string>
+    <string name="register_error_generic">Registration failed</string>
+
+    <string name="nav_catalog">Catalog</string>
+    <string name="nav_cart">Cart</string>
+    <string name="nav_profile">Profile</string>
+
+    <string name="profile_title">My profile</string>
+    <string name="profile_subtitle_read">Review your data. Tap Edit to update and save on the server.</string>
+    <string name="profile_subtitle_edit">Review the fields and fill in country before saving.</string>
+    <string name="profile_action_edit">Edit</string>
+    <string name="profile_action_save">Save</string>
+    <string name="profile_label_first_name">First name</string>
+    <string name="profile_label_last_name">Last name</string>
+    <string name="profile_label_email">Email</string>
+    <string name="profile_label_phone">Phone</string>
+    <string name="profile_label_city">City</string>
+    <string name="profile_label_country">Country</string>
+    <string name="profile_hint_country_required">Country *</string>
+    <string name="profile_country_required">Country is required.</string>
+    <string name="profile_required_fields">Fill name, last name, email and country.</string>
+    <string name="profile_updated">Profile updated</string>
+    <string name="profile_load_error">Error loading profile</string>
+    <string name="profile_save_error">Could not save the profile</string>
+
+    <string name="catalog_recommended_title">You may also like</string>
+    <string name="catalog_no_name">No name</string>
+    <string name="catalog_no_price">No price</string>
+    <string name="catalog_load_error">Error: %1$s</string>
+
+    <string name="cart_title">Shopping cart</string>
+    <string name="cart_empty_message">Your cart is empty</string>
+    <string name="cart_total_format">Total: %1$s</string>
+    <string name="cart_checkout">Proceed to payment</string>
+    <string name="cart_empty_toast">Cart is empty</string>
+
+    <string name="checkout_title">Confirm purchase</string>
+    <string name="checkout_summary">Order summary</string>
+    <string name="checkout_payment_method">Payment method</string>
+    <string name="checkout_card_holder_hint">Cardholder name</string>
+    <string name="checkout_card_number_hint">Card number</string>
+    <string name="checkout_card_expiry_hint">MM/YY</string>
+    <string name="checkout_card_cvv_hint">CVV</string>
+    <string name="checkout_confirm_button">Confirm purchase</string>
+    <string name="checkout_select_payment">Select a payment method</string>
+    <string name="checkout_error_format">Error: %1$s</string>
+    <string name="checkout_success_title">Order placed</string>
+    <string name="checkout_success_fallback">Your order was placed successfully.</string>
+
+    <string name="card_holder_required">Enter the cardholder name.</string>
+    <string name="card_number_invalid">Invalid card number.</string>
+    <string name="card_expiry_invalid">Invalid date. Use MM/YY format.</string>
+    <string name="card_cvv_invalid">Invalid CVV.</string>
+    <string name="card_month_invalid">Invalid expiration month.</string>
+    <string name="card_year_invalid">Invalid expiration year.</string>
+    <string name="card_month_range_invalid">Invalid month (01-12).</string>
+    <string name="card_expired">The card has expired.</string>
+
+    <string name="detail_ref_format">Ref: %1$s</string>
+    <string name="detail_material_format">Material: %1$s</string>
+    <string name="detail_na">N/A</string>
+    <string name="detail_no_description">No description</string>
+    <string name="detail_stock_format">Stock: %1$d</string>
+    <string name="detail_dimensions_format">Dimensions: %1$s×%2$s×%3$s cm | Weight: %4$sg</string>
+    <string name="detail_added_to_cart">Added to cart</string>
+    <string name="detail_not_found">Product not found</string>
+    <string name="detail_add_to_cart">Add to cart</string>
+</resources>
